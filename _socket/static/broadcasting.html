@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket.io interact</title>
+</head>
+<body>
+  <h1>Socket.io interact</h1>
+
+  <label for="url">URL:</label>
+  <input type="text" id="url"/>
+  <button id="send">go</button>
+  <ul id="list"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io({transports: ['websocket'], upgrade: false});
+
+    //broadcast
+    var addLi = (message) => {
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode(message));
+        document.getElementById('list').appendChild(li);
+    }
+
+    document.getElementById('send').addEventListener('click', (e) => {
+        socket.emit('url', document.getElementById('url').value);
+    });
+
+    socket.on('url', (url) => {
+        addLi(url + ' was sent');
+    });
+
+    socket.on('user.events', addLi);
+  </script>
+</body>
+</html>
